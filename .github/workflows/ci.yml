@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        env:
+          BUN_INSTALL_POSTINSTALL: '0'
+          BUN_INSTALL_PREINSTALL: '0'
+        run: bun install --no-save
+
+      - name: Format Check
+        run: bun run format:check
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Test
+        run: bun run test
+
+      - name: Build
+        run: bun run build
+
+      - name: Knip
+        run: bun run knip
+
+      - name: Changeset Status
+        if: github.event_name == 'pull_request'
+        run: bunx changeset status --since=origin/main
