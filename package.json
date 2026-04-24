@@ -1,6 +1,6 @@
 {
   "name": "@ankhorage/orchestrator-module-expo-google-fonts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Expo Google Fonts module for @ankhorage/orchestrator.",
   "type": "module",
   "main": "./dist/index.js",
