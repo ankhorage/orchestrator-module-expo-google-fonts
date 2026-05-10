@@ -1,5 +1,3 @@
-import { expoGoogleFontsModule } from './module';
-
 export {
   type ExpoGoogleFontConfigItem,
   type ExpoGoogleFontsModuleConfig,
@@ -8,5 +6,3 @@ export {
   parseExpoGoogleFontsModuleConfig,
 } from './config';
 export { EXPO_GOOGLE_FONTS_MODULE_ID, expoGoogleFontsModule } from './module';
-
-export default expoGoogleFontsModule;
