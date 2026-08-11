@@ -5,7 +5,7 @@
     "": {
       "name": "@ankhorage/orchestrator-module-expo-google-fonts",
       "dependencies": {
-        "@ankhorage/orchestrator": "^0.2.2",
+        "@ankhorage/orchestrator": "^0.3.0",
       },
       "devDependencies": {
         "@ankhorage/devtools": "^1.0.6",
@@ -19,7 +19,7 @@
   "packages": {
     "@ankhorage/devtools": ["@ankhorage/devtools@1.0.6", "", { "dependencies": { "@eslint/js": "^10.0.1", "eslint": "^10.2.0", "eslint-config-prettier": "^10.1.8", "eslint-plugin-import": "^2.32.0", "eslint-plugin-prettier": "^5.5.5", "eslint-plugin-simple-import-sort": "^12.1.1", "eslint-plugin-unused-imports": "^4.4.1", "knip": "^6.12.2", "prettier": "^3.8.1", "typescript-eslint": "^8.24.0" }, "bin": { "ankhorage-eslint": "dist/eslint-cli.js", "ankhorage-knip": "dist/knip-cli.js", "ankhorage-prettier": "dist/prettier-cli.js" } }, "sha512-QXvpJ3uvr3xcl/smjv0yMimtGRCt/dPs0lVdHYMAXg06u1HsZmoKhRyxdFX8OXcCv9RnfPNheUkjAbOrs0eeaQ=="],
 
-    "@ankhorage/orchestrator": ["@ankhorage/orchestrator@0.2.2", "", {}, "sha512-k9LxBkFQ4zIuYnQkhIm9wt997z60tI8gQiKAC724ZV0YO747B7O0vvfm2upflXotHvb8NMDgsLZzgc6I5g7+WA=="],
+    "@ankhorage/orchestrator": ["@ankhorage/orchestrator@0.3.0", "", {}, "sha512-OR2mrVT0kxV6X96m43u8PUUi0y2A9veMaRkJHa5VukYTnmAZipOtBruHdwqO9Z7huiKnaGIFv4yoOU2QgrwPIg=="],
 
     "@babel/runtime": ["@babel/runtime@7.29.2", "", {}, "sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g=="],
 

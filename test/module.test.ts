@@ -39,6 +39,7 @@ describe('expoGoogleFontsModule', () => {
       'json-set',
       'json-set',
     ]);
+    expect(JSON.stringify(actions)).not.toContain('src/plugins/');
 
     expect(actions[0]).toEqual({
       type: 'ensure-packages',
@@ -53,9 +54,9 @@ describe('expoGoogleFontsModule', () => {
     }
 
     expect(writeFilesAction.files.map((file) => file.path)).toEqual([
-      'src/plugins/google-fonts/fonts.generated.ts',
-      'src/plugins/google-fonts/FontProvider.tsx',
-      'src/plugins/google-fonts/index.ts',
+      'src/modules/google-fonts/fonts.generated.ts',
+      'src/modules/google-fonts/FontProvider.tsx',
+      'src/modules/google-fonts/index.ts',
     ]);
     expect(writeFilesAction.files[0]?.content).toContain('export const fontAssets');
     expect(writeFilesAction.files[1]?.content).toContain('import { loadAsync } from "expo-font";');
@@ -64,7 +65,7 @@ describe('expoGoogleFontsModule', () => {
       type: 'patch-text-block',
       path: 'src/app/_layout.tsx',
       blockId: 'expo-google-fonts:root-layout-import',
-      content: 'import { GoogleFontsProvider } from "@/plugins/google-fonts";',
+      content: 'import { GoogleFontsProvider } from "@/modules/google-fonts";',
       anchor: {
         find: "import ankhConfig from '@root/ankh.config.json';",
         position: 'before',
