@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.0
+
+### Minor Changes
+
+- 2711910: Generate Google Fonts runtime files under the canonical `src/modules/google-fonts` namespace and update layout imports accordingly. Add an optional package-owned host contribution with generic metadata, layout integration, and config normalization while keeping the root Orchestrator module standalone and avoiding a fake configuration form.
+
 ## 0.1.2
 
 ### Patch Changes
