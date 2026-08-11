@@ -25,7 +25,7 @@ export function buildGoogleFontsWriteFiles(
 ): WriteFileInstruction[] {
   return [
     {
-      path: 'src/plugins/google-fonts/fonts.generated.ts',
+      path: 'src/modules/google-fonts/fonts.generated.ts',
       content: renderTemplate('fonts.generated.ts.tpl', {
         FONT_IMPORTS: buildFontImports(config),
         FONT_ASSET_LINES: buildFontAssetLines(config),
@@ -33,12 +33,12 @@ export function buildGoogleFontsWriteFiles(
       overwrite: true,
     },
     {
-      path: 'src/plugins/google-fonts/FontProvider.tsx',
+      path: 'src/modules/google-fonts/FontProvider.tsx',
       content: readTemplate('FontProvider.tsx.tpl'),
       overwrite: true,
     },
     {
-      path: 'src/plugins/google-fonts/index.ts',
+      path: 'src/modules/google-fonts/index.ts',
       content: readTemplate('index.ts.tpl'),
       overwrite: true,
     },

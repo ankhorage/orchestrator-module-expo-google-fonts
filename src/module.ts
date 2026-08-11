@@ -29,7 +29,7 @@ export const expoGoogleFontsModule: ModuleDefinition<ExpoGoogleFontsModuleConfig
           type: 'patch-text-block',
           path: 'src/app/_layout.tsx',
           blockId: `${EXPO_GOOGLE_FONTS_MODULE_ID}:root-layout-import`,
-          content: 'import { GoogleFontsProvider } from "@/plugins/google-fonts";',
+          content: 'import { GoogleFontsProvider } from "@/modules/google-fonts";',
           anchor: {
             find: "import ankhConfig from '@root/ankh.config.json';",
             position: 'before',

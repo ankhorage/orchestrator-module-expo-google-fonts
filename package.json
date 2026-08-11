@@ -34,6 +34,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./host": {
+      "types": "./dist/host.d.ts",
+      "default": "./dist/host.js"
     }
   },
   "scripts": {
@@ -48,7 +52,7 @@
     "version-packages": "changeset version"
   },
   "dependencies": {
-    "@ankhorage/orchestrator": "^0.2.2"
+    "@ankhorage/orchestrator": "^0.3.0"
   },
   "devDependencies": {
     "@ankhorage/devtools": "^1.0.6",
