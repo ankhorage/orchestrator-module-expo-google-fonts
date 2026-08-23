@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.1
+
+### Patch Changes
+
+- ae36a83: Use Expo Runtime 3 as the module's direct released platform-contract dependency, derive the Expo SDK 57 `expo-font` requirement from it, and emit strongly typed Google Font assets without compatibility casts.
+
 ## 0.2.0
 
 ### Minor Changes
