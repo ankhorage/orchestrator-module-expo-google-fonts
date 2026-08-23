@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { EXPO_PLATFORM } from '@ankhorage/expo-runtime/platform';
 import type { WriteFilesAction } from '@ankhorage/orchestrator';
 import { describe, expect, test } from 'bun:test';
 
@@ -43,7 +44,7 @@ describe('expoGoogleFontsModule', () => {
 
     expect(actions[0]).toEqual({
       type: 'ensure-packages',
-      add: [{ name: 'expo-font', version: '~13.0.3' }],
+      add: [EXPO_PLATFORM.packages.font],
     });
 
     const writeFilesAction = actions.find(
@@ -59,6 +60,9 @@ describe('expoGoogleFontsModule', () => {
       'src/modules/google-fonts/index.ts',
     ]);
     expect(writeFilesAction.files[0]?.content).toContain('export const fontAssets');
+    expect(writeFilesAction.files[0]?.content).toContain(
+      'export const fontAssets: Record<string, FontSource>',
+    );
     expect(writeFilesAction.files[1]?.content).toContain('import { loadAsync } from "expo-font";');
 
     expect(actions[2]).toEqual({
@@ -122,7 +126,7 @@ describe('expoGoogleFontsModule', () => {
 
     expect(actions[0]).toEqual({
       type: 'ensure-packages',
-      add: [{ name: 'expo-font', version: '~13.0.3' }, { name: '@expo-google-fonts/inter' }],
+      add: [EXPO_PLATFORM.packages.font, { name: '@expo-google-fonts/inter' }],
     });
 
     const writeFilesAction = actions.find(
@@ -133,14 +137,13 @@ describe('expoGoogleFontsModule', () => {
     }
 
     expect(writeFilesAction.files[0]?.content).toContain(
-      'import * as Inter from "@expo-google-fonts/inter";',
+      'import { Inter_400Regular, Inter_400Regular_Italic, Inter_700Bold, Inter_700Bold_Italic } from "@expo-google-fonts/inter";',
     );
+    expect(writeFilesAction.files[0]?.content).toContain('"Inter_400_Regular": Inter_400Regular,');
     expect(writeFilesAction.files[0]?.content).toContain(
-      '"Inter_400_Regular": ((Inter as unknown) as Record<string, unknown>)["Inter_400Regular"],',
+      '"Inter_700_Italic": Inter_700Bold_Italic,',
     );
-    expect(writeFilesAction.files[0]?.content).toContain(
-      '"Inter_700_Italic": ((Inter as unknown) as Record<string, unknown>)["Inter_700Bold_Italic"],',
-    );
+    expect(writeFilesAction.files[0]?.content).not.toContain('as unknown');
     expect(actions[4]).toEqual({
       type: 'json-set',
       path: 'ankh.config.json',

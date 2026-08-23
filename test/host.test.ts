@@ -26,7 +26,7 @@ describe('expo google fonts host contribution', () => {
     };
 
     expect(Object.keys(packageJson.exports ?? {})).toEqual(['.', './host']);
-    expect(packageJson.dependencies?.['@ankhorage/orchestrator']).toBe('^0.3.0');
+    expect(packageJson.dependencies?.['@ankhorage/orchestrator']).toBe('^0.3.1');
     expect(packageJson.dependencies?.['@ankhorage/studio']).toBeUndefined();
     expect(packageJson.dependencies?.['@ankhorage/zora']).toBeUndefined();
     expect(packageJson.dependencies?.react).toBeUndefined();

@@ -8,17 +8,17 @@ import type { NormalizedExpoGoogleFontsModuleConfig } from './config';
 
 const TEMPLATE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../templates');
 const templateCache = new Map<string, string>();
-const weightMap: Record<number, string> = {
-  100: 'Thin',
-  200: 'ExtraLight',
-  300: 'Light',
-  400: 'Regular',
-  500: 'Medium',
-  600: 'SemiBold',
-  700: 'Bold',
-  800: 'ExtraBold',
-  900: 'Black',
-};
+const weightMap = new Map<number, string>([
+  [100, 'Thin'],
+  [200, 'ExtraLight'],
+  [300, 'Light'],
+  [400, 'Regular'],
+  [500, 'Medium'],
+  [600, 'SemiBold'],
+  [700, 'Bold'],
+  [800, 'ExtraBold'],
+  [900, 'Black'],
+]);
 
 export function buildGoogleFontsWriteFiles(
   config: NormalizedExpoGoogleFontsModuleConfig,
@@ -48,8 +48,10 @@ export function buildGoogleFontsWriteFiles(
 function buildFontImports(config: NormalizedExpoGoogleFontsModuleConfig): string {
   return config.installedFonts
     .map((font) => {
-      const importName = toPascalCase(font.family);
-      return `import * as ${importName} from ${JSON.stringify(`@expo-google-fonts/${font.id}`)};`;
+      const exportNames = font.weights.flatMap((weight) =>
+        font.styles.map((style) => buildFontExportName(font.family, weight, style)),
+      );
+      return `import { ${exportNames.join(', ')} } from ${JSON.stringify(`@expo-google-fonts/${font.id}`)};`;
     })
     .join('\n');
 }
@@ -61,15 +63,19 @@ function buildFontAssetLines(config: NormalizedExpoGoogleFontsModuleConfig): str
 
       return font.weights.flatMap((weight) =>
         font.styles.map((style) => {
-          const styleSuffix = style === 'italic' ? '_Italic' : '';
-          const exportName = `${importName}_${weight}${weightMap[weight] ?? 'Regular'}${styleSuffix}`;
+          const exportName = buildFontExportName(font.family, weight, style);
           const assetKey = `${importName}_${weight}_${style === 'italic' ? 'Italic' : 'Regular'}`;
 
-          return `  ${JSON.stringify(assetKey)}: ((${importName} as unknown) as Record<string, unknown>)[${JSON.stringify(exportName)}],`;
+          return `  ${JSON.stringify(assetKey)}: ${exportName},`;
         }),
       );
     })
     .join('\n');
+}
+
+function buildFontExportName(family: string, weight: number, style: string): string {
+  const styleSuffix = style === 'italic' ? '_Italic' : '';
+  return `${toPascalCase(family)}_${weight}${weightMap.get(weight) ?? 'Regular'}${styleSuffix}`;
 }
 
 function toPascalCase(value: string): string {
