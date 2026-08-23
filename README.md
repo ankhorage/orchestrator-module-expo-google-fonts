@@ -2,6 +2,10 @@
 
 Adds Google Fonts support to an Expo project.
 
+The module reads its `expo-font` requirement from the released
+`@ankhorage/expo-runtime/platform` contract. Generated providers load typed Google Font assets at
+runtime, which keeps the same installation usable on Web, Android, and iOS.
+
 ## 🎯 What you get
 
 - Fonts configured in seconds
