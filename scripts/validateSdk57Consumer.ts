@@ -4,10 +4,8 @@ import path from 'node:path';
 
 import { EXPO_PLATFORM } from '@ankhorage/expo-runtime/platform';
 
-import {
-  type PlatformProjection,
-  writeSdk57GoogleFontsConsumerFixtureAsync,
-} from './writeSdk57GoogleFontsConsumerFixtureAsync';
+import { assertSdk57GoogleFontsConsumerAsync } from './assertSdk57GoogleFontsConsumerAsync';
+import { writeSdk57GoogleFontsConsumerFixtureAsync } from './writeSdk57GoogleFontsConsumerFixtureAsync';
 
 interface CommandOptions {
   readonly capture?: boolean;
@@ -16,10 +14,43 @@ interface CommandOptions {
 
 interface PackedCandidate {
   readonly filename: string;
+  readonly name: string;
+  readonly path: string;
+  readonly version: string;
+}
+
+interface PackageIdentity {
+  readonly name: string;
+  readonly version: string;
+}
+
+interface PackageManifest {
+  readonly dependencies?: Readonly<Record<string, string>>;
+  readonly name?: string;
+  readonly peerDependencies?: Readonly<Record<string, string>>;
+  readonly version?: string;
+}
+
+interface ExpectedPackageGraph {
+  readonly runtime: PackageIdentity;
+  readonly runtimeRequirement: string;
+  readonly surface: PackageIdentity;
+}
+
+interface PlatformProjection {
+  readonly runtime: Readonly<Record<string, { readonly name: string; readonly version: string }>>;
+  readonly expoRouter: { readonly name: string; readonly version: string };
+  readonly metroRuntime: { readonly name: string; readonly version: string };
+  readonly requiredPeers: readonly { readonly name: string; readonly version: string }[];
+  readonly tooling: {
+    readonly typescript: { readonly name: string; readonly version: string };
+  };
 }
 
 const repositoryRoot = path.resolve(import.meta.dir, '..');
 const scratchRoot = await mkdtemp(path.join(tmpdir(), 'expo-google-fonts-sdk57-'));
+const candidatePackageName = '@ankhorage/orchestrator-module-expo-google-fonts';
+const releasedSurfaceSpecifier = '@ankhorage/surface@3.0.0';
 
 try {
   const candidateDirectory = path.join(scratchRoot, 'candidate');
@@ -27,16 +58,41 @@ try {
   await mkdir(candidateDirectory, { recursive: true });
   await mkdir(path.join(consumerRoot, 'src/app'), { recursive: true });
 
-  const candidatePath = await packCandidateAsync(candidateDirectory);
+  const candidate = await packCandidateAsync(candidateDirectory);
+  const repositoryPackage = await readJsonAsync<PackageManifest>(
+    path.join(repositoryRoot, 'package.json'),
+  );
+  const runtimePackage = await readJsonAsync<PackageManifest>(
+    path.join(repositoryRoot, 'node_modules/@ankhorage/expo-runtime/package.json'),
+  );
+  const surfacePackage = await readReleasedPackageManifestAsync(releasedSurfaceSpecifier);
+  const expectedPackages: ExpectedPackageGraph = {
+    runtime: requirePackageIdentity(runtimePackage, '@ankhorage/expo-runtime'),
+    runtimeRequirement: requireVersion(repositoryPackage.dependencies, '@ankhorage/expo-runtime'),
+    surface: requirePackageIdentity(surfacePackage, '@ankhorage/surface'),
+  };
+  const surfaceDependencies = {
+    ...surfacePackage.peerDependencies,
+    [expectedPackages.surface.name]: expectedPackages.surface.version,
+  };
   const expectedPlatform = createPlatformProjection();
-  await writeSdk57GoogleFontsConsumerFixtureAsync(consumerRoot, candidatePath, expectedPlatform);
+  await writeSdk57GoogleFontsConsumerFixtureAsync(
+    consumerRoot,
+    candidate.path,
+    expectedPlatform,
+    surfaceDependencies,
+  );
   await runAsync('bun', ['install'], consumerRoot);
-  await assertOnlyCandidateUsesFileProtocolAsync(consumerRoot);
   await assertReleasedPlatformAsync(consumerRoot, expectedPlatform);
 
   await writeApplyScriptAsync(consumerRoot);
   await runAsync('bun', ['apply-module.ts'], consumerRoot);
-  await assertGeneratedConsumerAsync(consumerRoot, expectedPlatform);
+  await assertSdk57GoogleFontsConsumerAsync({
+    candidate,
+    consumerRoot,
+    expectedPackages,
+    font: EXPO_PLATFORM.packages.font,
+  });
 
   await runAsync('bunx', ['expo', 'install', '--check'], consumerRoot);
   await runAsync('bunx', ['expo-doctor'], consumerRoot);
@@ -71,7 +127,7 @@ function createPlatformProjection(): PlatformProjection {
   };
 }
 
-async function packCandidateAsync(candidateDirectory: string): Promise<string> {
+async function packCandidateAsync(candidateDirectory: string): Promise<PackedCandidate> {
   await runAsync('bun', ['run', 'build'], repositoryRoot);
   const output = await runAsync(
     'npm',
@@ -82,9 +138,12 @@ async function packCandidateAsync(candidateDirectory: string): Promise<string> {
       env: { npm_config_cache: path.join(scratchRoot, 'npm-cache') },
     },
   );
-  const [candidate] = JSON.parse(output) as PackedCandidate[];
+  const [candidate] = JSON.parse(output) as Omit<PackedCandidate, 'path'>[];
   if (!candidate) throw new Error('npm pack did not report a candidate artifact.');
-  return path.join(candidateDirectory, candidate.filename);
+  if (candidate.name !== candidatePackageName) {
+    throw new Error(`npm pack reported unexpected candidate name: ${candidate.name}.`);
+  }
+  return { ...candidate, path: path.join(candidateDirectory, candidate.filename) };
 }
 
 async function assertReleasedPlatformAsync(
@@ -102,70 +161,6 @@ async function assertReleasedPlatformAsync(
   );
   if (JSON.stringify(JSON.parse(output)) !== JSON.stringify(expectedPlatform)) {
     throw new Error('Consumer resolved a different released platform contract.');
-  }
-}
-
-async function assertGeneratedConsumerAsync(
-  consumerRoot: string,
-  platform: PlatformProjection,
-): Promise<void> {
-  const candidatePackage = await readJsonAsync<{ version?: string }>(
-    path.join(
-      consumerRoot,
-      'node_modules/@ankhorage/orchestrator-module-expo-google-fonts/package.json',
-    ),
-  );
-  if (candidatePackage.version !== '0.2.0') {
-    throw new Error(`Unexpected packed candidate version: ${String(candidatePackage.version)}.`);
-  }
-  const packageJson = await readJsonAsync<{ dependencies?: Record<string, string> }>(
-    path.join(consumerRoot, 'package.json'),
-  );
-  const fontRequirement = EXPO_PLATFORM.packages.font;
-  if (packageJson.dependencies?.[fontRequirement.name] !== fontRequirement.version) {
-    throw new Error('Generated expo-font requirement does not match EXPO_PLATFORM.');
-  }
-  const generated = await readFile(
-    path.join(consumerRoot, 'src/modules/google-fonts/fonts.generated.ts'),
-    'utf8',
-  );
-  const provider = await readFile(
-    path.join(consumerRoot, 'src/modules/google-fonts/FontProvider.tsx'),
-    'utf8',
-  );
-  if (!generated.includes('Record<string, FontSource>')) {
-    throw new Error('Generated font assets do not use the Expo FontSource contract.');
-  }
-  if (!generated.includes('"Inter_400_Regular": Inter_400Regular')) {
-    throw new Error('Generated Inter assets are not direct typed package exports.');
-  }
-  if (generated.includes('as unknown') || generated.includes('import * as Inter')) {
-    throw new Error(
-      'Generated Inter assets retained broad namespace imports or compatibility casts.',
-    );
-  }
-  if (!provider.includes('await loadAsync(fontAssets)')) {
-    throw new Error('Generated provider does not load runtime font assets.');
-  }
-  const activeFiles = `${JSON.stringify(packageJson)}\n${generated}\n${provider}`;
-  if (activeFiles.includes('~13.0.3')) {
-    throw new Error('Packed consumer retained historical SDK 54 package truth.');
-  }
-  void platform;
-}
-
-async function assertOnlyCandidateUsesFileProtocolAsync(consumerRoot: string): Promise<void> {
-  const packageJson = await readJsonAsync<{ dependencies?: Record<string, string> }>(
-    path.join(consumerRoot, 'package.json'),
-  );
-  const fileDependencies = Object.entries(packageJson.dependencies ?? {}).filter(([, version]) =>
-    version.startsWith('file:'),
-  );
-  if (
-    fileDependencies.length !== 1 ||
-    fileDependencies[0]?.[0] !== '@ankhorage/orchestrator-module-expo-google-fonts'
-  ) {
-    throw new Error('Only the packed candidate may use the file protocol.');
   }
 }
 
@@ -213,6 +208,34 @@ async function prebuildAndAssertAsync(
 
 async function readJsonAsync<T>(filePath: string): Promise<T> {
   return JSON.parse(await readFile(filePath, 'utf8')) as T;
+}
+
+async function readReleasedPackageManifestAsync(specifier: string): Promise<PackageManifest> {
+  const output = await runAsync(
+    'npm',
+    ['view', specifier, 'name', 'version', 'peerDependencies', '--json'],
+    repositoryRoot,
+    { capture: true, env: { npm_config_cache: path.join(scratchRoot, 'npm-cache') } },
+  );
+  return JSON.parse(output) as PackageManifest;
+}
+
+function requirePackageIdentity(manifest: PackageManifest, expectedName: string): PackageIdentity {
+  if (manifest.name !== expectedName || typeof manifest.version !== 'string') {
+    throw new Error(`Expected installed released package ${expectedName}.`);
+  }
+  return { name: manifest.name, version: manifest.version };
+}
+
+function requireVersion(
+  versions: Readonly<Record<string, string>> | undefined,
+  packageName: string,
+): string {
+  const version = Reflect.get(versions ?? {}, packageName) as unknown;
+  if (typeof version !== 'string') {
+    throw new Error(`Missing released requirement for ${packageName}.`);
+  }
+  return version;
 }
 
 async function runAsync(

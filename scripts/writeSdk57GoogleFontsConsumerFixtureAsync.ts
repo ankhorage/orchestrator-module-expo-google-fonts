@@ -1,7 +1,20 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-export interface PlatformProjection {
+export async function writeSdk57GoogleFontsConsumerFixtureAsync(
+  consumerRoot: string,
+  candidatePath: string,
+  platform: PlatformProjection,
+  surfaceDependencies: Readonly<Record<string, string>>,
+): Promise<void> {
+  await Promise.all([
+    writeConsumerPackageAsync(consumerRoot, candidatePath, platform, surfaceDependencies),
+    writeConsumerConfigAsync(consumerRoot),
+    writeConsumerSourceAsync(consumerRoot),
+  ]);
+}
+
+interface PlatformProjection {
   readonly runtime: Readonly<Record<string, { readonly name: string; readonly version: string }>>;
   readonly expoRouter: { readonly name: string; readonly version: string };
   readonly metroRuntime: { readonly name: string; readonly version: string };
@@ -11,22 +24,11 @@ export interface PlatformProjection {
   };
 }
 
-export async function writeSdk57GoogleFontsConsumerFixtureAsync(
-  consumerRoot: string,
-  candidatePath: string,
-  platform: PlatformProjection,
-): Promise<void> {
-  await Promise.all([
-    writeConsumerPackageAsync(consumerRoot, candidatePath, platform),
-    writeConsumerConfigAsync(consumerRoot),
-    writeConsumerSourceAsync(consumerRoot),
-  ]);
-}
-
 async function writeConsumerPackageAsync(
   consumerRoot: string,
   candidatePath: string,
   platform: PlatformProjection,
+  surfaceDependencies: Readonly<Record<string, string>>,
 ): Promise<void> {
   const platformDependencies = Object.fromEntries(
     [
@@ -43,16 +45,11 @@ async function writeConsumerPackageAsync(
     type: 'module',
     main: 'expo-router/entry',
     dependencies: {
+      ...surfaceDependencies,
       ...platformDependencies,
-      '@ankhorage/expo-runtime': '2.7.0',
       '@ankhorage/orchestrator': '0.3.1',
       '@ankhorage/orchestrator-module-expo-google-fonts': `file:${candidatePath}`,
       '@ankhorage/runtime': '2.2.0',
-      '@ankhorage/surface': '3.0.0',
-      '@react-native-vector-icons/fontawesome': '^13.1.3',
-      '@react-native-vector-icons/fontawesome5': '^13.1.3',
-      '@react-native-vector-icons/fontawesome6': '^13.1.3',
-      '@react-native-vector-icons/ionicons': '^13.1.3',
     },
     devDependencies: {
       '@types/react': '^19.2.18',
