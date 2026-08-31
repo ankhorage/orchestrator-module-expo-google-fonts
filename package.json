@@ -56,7 +56,7 @@
     "version-packages": "changeset version"
   },
   "dependencies": {
-    "@ankhorage/expo-runtime": "^3.0.0",
+    "@ankhorage/expo-runtime": "^3.1.1",
     "@ankhorage/orchestrator": "^0.3.1"
   },
   "devDependencies": {
