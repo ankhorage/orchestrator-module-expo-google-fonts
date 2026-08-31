@@ -46,14 +46,14 @@
     "lint:fix": "ankhorage-eslint . --fix --max-warnings=0",
     "format": "ankhorage-prettier --write .",
     "format:check": "ankhorage-prettier --check .",
-    "knip": "ankhorage-knip",
     "test": "bun test",
     "typecheck": "bun x tsc --noEmit -p tsconfig.json && bun x tsc --noEmit -p tsconfig.scripts.json",
     "validate:sdk57-consumer": "bun scripts/validateSdk57Consumer.ts",
-    "changeset:status": "changeset status --since=origin/main",
+    "changeset:status": "ankhorage-changeset status --since=origin/main",
     "docs": "ankhorage-prettier --check README.md",
-    "changeset": "changeset",
-    "version-packages": "changeset version"
+    "changeset": "ankhorage-changeset",
+    "version-packages": "ankhorage-changeset version",
+    "knip:check": "ankhorage-knip"
   },
   "dependencies": {
     "@ankhorage/expo-runtime": "^3.0.0",
@@ -61,12 +61,11 @@
   },
   "devDependencies": {
     "@ankhorage/devtools": "^1.8.3",
-    "@changesets/cli": "^2.31.0",
-    "@types/bun": "^1.3.14",
+    "@types/bun": "^1.4.0",
     "@types/node": "^24.13.3",
     "typescript": "~6.0.3"
   },
-  "packageManager": "bun@1.3.14",
+  "packageManager": "bun@1.4.0",
   "publishConfig": {
     "access": "public"
   }
