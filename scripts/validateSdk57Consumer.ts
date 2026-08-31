@@ -159,26 +159,9 @@ async function assertReleasedPlatformAsync(
     consumerRoot,
     { capture: true },
   );
-  const installedPlatform: unknown = JSON.parse(output);
-  if (
-    JSON.stringify(toVersionPolicyShape(installedPlatform)) !==
-    JSON.stringify(toVersionPolicyShape(expectedPlatform))
-  ) {
+  if (JSON.stringify(JSON.parse(output)) !== JSON.stringify(expectedPlatform)) {
     throw new Error('Consumer resolved a different released platform contract.');
   }
-}
-
-function toVersionPolicyShape(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(toVersionPolicyShape);
-  if (typeof value !== 'object' || value === null) return value;
-  return Object.fromEntries(
-    Object.entries(value).map(([key, entry]) => [
-      key,
-      key === 'version' && typeof entry === 'string'
-        ? entry.replace(/^\D*(\d+\.\d+)(?:\.\d+)?(?:\D.*)?$/u, '$1.x')
-        : toVersionPolicyShape(entry),
-    ]),
-  );
 }
 
 async function exportAndAssertFontAsync(

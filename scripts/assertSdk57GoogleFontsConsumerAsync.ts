@@ -119,17 +119,9 @@ async function assertGeneratedFontSourcesAsync(
 }
 
 function assertGeneratedRequirement(consumerPackage: PackageManifest, font: PackageIdentity): void {
-  const generatedRequirement = Reflect.get(consumerPackage.dependencies ?? {}, font.name);
-  if (
-    typeof generatedRequirement !== 'string' ||
-    toVersionPolicyShape(generatedRequirement) !== toVersionPolicyShape(font.version)
-  ) {
+  if (Reflect.get(consumerPackage.dependencies ?? {}, font.name) !== font.version) {
     throw new Error('Generated expo-font requirement does not match EXPO_PLATFORM.');
   }
-}
-
-function toVersionPolicyShape(version: string): string {
-  return version.replace(/^\D*(\d+\.\d+)(?:\.\d+)?(?:\D.*)?$/u, '$1.x');
 }
 
 async function assertInstalledPackageAsync(
