@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.3
+
+### Patch Changes
+
+- 381c756: Update the Expo Runtime dependency to the current compatible release.
+
 ## 0.2.2
 
 ### Patch Changes
