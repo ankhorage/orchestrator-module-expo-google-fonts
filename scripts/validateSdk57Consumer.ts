@@ -50,7 +50,7 @@ interface PlatformProjection {
 const repositoryRoot = path.resolve(import.meta.dir, '..');
 const scratchRoot = await mkdtemp(path.join(tmpdir(), 'expo-google-fonts-sdk57-'));
 const candidatePackageName = '@ankhorage/orchestrator-module-expo-google-fonts';
-const releasedSurfaceSpecifier = '@ankhorage/surface@3.0.0';
+const releasedSurfaceSpecifier = '@ankhorage/surface@3.3.0';
 
 try {
   const candidateDirectory = path.join(scratchRoot, 'candidate');
