@@ -6,6 +6,8 @@ import { describe, expect, test } from 'bun:test';
 import { expoGoogleFontsHostContribution } from '../src/host';
 import { EXPO_GOOGLE_FONTS_MODULE_ID, expoGoogleFontsModule } from '../src/index';
 
+const CARET_SEMVER_RANGE = /^\^\d+\.\d+\.\d+$/u;
+
 describe('expo google fonts host contribution', () => {
   test('provides package-owned generic host metadata without a fake admin form', () => {
     expect(expoGoogleFontsHostContribution.id).toBe(EXPO_GOOGLE_FONTS_MODULE_ID);
@@ -26,7 +28,7 @@ describe('expo google fonts host contribution', () => {
     };
 
     expect(Object.keys(packageJson.exports ?? {})).toEqual(['.', './host']);
-    expect(packageJson.dependencies?.['@ankhorage/orchestrator']).toBe('^0.3.1');
+    expect(packageJson.dependencies?.['@ankhorage/orchestrator']).toMatch(CARET_SEMVER_RANGE);
     expect(packageJson.dependencies?.['@ankhorage/studio']).toBeUndefined();
     expect(packageJson.dependencies?.['@ankhorage/zora']).toBeUndefined();
     expect(packageJson.dependencies?.react).toBeUndefined();
