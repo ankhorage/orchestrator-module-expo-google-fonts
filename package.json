@@ -56,16 +56,16 @@
     "knip:check": "ankhorage-knip"
   },
   "dependencies": {
-    "@ankhorage/expo-runtime": "^3.2.10",
+    "@ankhorage/expo-runtime": "^3.2.12",
     "@ankhorage/orchestrator": "^0.3.2"
   },
   "devDependencies": {
-    "@ankhorage/devtools": "^1.10.7",
-    "@types/bun": "^1.4.0",
+    "@ankhorage/devtools": "^1.11.5",
+    "@types/bun": "^1.4.1",
     "@types/node": "^24.13.3",
     "typescript": "~6.0.3"
   },
-  "packageManager": "bun@1.4.0",
+  "packageManager": "bun@1.4.2",
   "publishConfig": {
     "access": "public"
   }
