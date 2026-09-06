@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.5
+
+### Patch Changes
+
+- cdd395c: Update the Expo Runtime baseline and the managed Devtools release workflow.
+
 ## 0.2.4
 
 ### Patch Changes

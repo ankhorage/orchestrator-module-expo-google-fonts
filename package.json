@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "@ankhorage/orchestrator-module-expo-google-fonts",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Expo Google Fonts module for @ankhorage/orchestrator.",
   "type": "module",
   "main": "./dist/index.js",
