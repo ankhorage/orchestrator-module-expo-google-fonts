@@ -1,4 +1,5 @@
 ---
+'@ankhorage/orchestrator-module-expo-google-fonts': patch
 ---
 
-Update Ankhorage dependencies: `@ankhorage/devtools`.
+Update the Expo Runtime baseline and the managed Devtools release workflow.
