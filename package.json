@@ -15,12 +15,13 @@
     "url": "git+https://github.com/ankhorage/orchestrator-module-expo-google-fonts.git"
   },
   "keywords": [
-    "typescript",
+    "ankhorage",
     "expo",
-    "google-fonts",
     "fonts",
+    "google-fonts",
     "orchestrator-module",
-    "react-native"
+    "react-native",
+    "typescript"
   ],
   "sideEffects": false,
   "files": [
