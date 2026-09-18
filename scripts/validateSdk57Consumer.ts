@@ -43,6 +43,7 @@ interface PlatformProjection {
   readonly metroRuntime: { readonly name: string; readonly version: string };
   readonly requiredPeers: readonly { readonly name: string; readonly version: string }[];
   readonly tooling: {
+    readonly reactTypes: { readonly name: string; readonly version: string };
     readonly typescript: { readonly name: string; readonly version: string };
   };
 }
@@ -123,7 +124,10 @@ function createPlatformProjection(): PlatformProjection {
       EXPO_PLATFORM.packages.linking,
       EXPO_PLATFORM.navigation.safeArea,
     ],
-    tooling: { typescript: EXPO_PLATFORM.tooling.typescript },
+    tooling: {
+      reactTypes: EXPO_PLATFORM.tooling.reactTypes,
+      typescript: EXPO_PLATFORM.tooling.typescript,
+    },
   };
 }
 
@@ -154,7 +158,7 @@ async function assertReleasedPlatformAsync(
     'bun',
     [
       '-e',
-      "import { EXPO_PLATFORM } from '@ankhorage/expo-runtime/platform'; console.log(JSON.stringify({ runtime: EXPO_PLATFORM.runtime, expoRouter: EXPO_PLATFORM.navigation.expoRouter, metroRuntime: EXPO_PLATFORM.packages.metroRuntime, requiredPeers: [EXPO_PLATFORM.packages.camera, EXPO_PLATFORM.packages.constants, EXPO_PLATFORM.packages.documentPicker, EXPO_PLATFORM.packages.fileSystem, EXPO_PLATFORM.packages.imagePicker, EXPO_PLATFORM.packages.linking, EXPO_PLATFORM.navigation.safeArea], tooling: { typescript: EXPO_PLATFORM.tooling.typescript } }));",
+      "import { EXPO_PLATFORM } from '@ankhorage/expo-runtime/platform'; console.log(JSON.stringify({ runtime: EXPO_PLATFORM.runtime, expoRouter: EXPO_PLATFORM.navigation.expoRouter, metroRuntime: EXPO_PLATFORM.packages.metroRuntime, requiredPeers: [EXPO_PLATFORM.packages.camera, EXPO_PLATFORM.packages.constants, EXPO_PLATFORM.packages.documentPicker, EXPO_PLATFORM.packages.fileSystem, EXPO_PLATFORM.packages.imagePicker, EXPO_PLATFORM.packages.linking, EXPO_PLATFORM.navigation.safeArea], tooling: { reactTypes: EXPO_PLATFORM.tooling.reactTypes, typescript: EXPO_PLATFORM.tooling.typescript } }));",
     ],
     consumerRoot,
     { capture: true },

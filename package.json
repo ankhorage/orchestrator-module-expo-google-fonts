@@ -57,8 +57,8 @@
     "knip:check": "ankhorage-knip"
   },
   "dependencies": {
-    "@ankhorage/expo-runtime": "^3.2.13",
-    "@ankhorage/orchestrator": "^0.3.2"
+    "@ankhorage/expo-runtime": "^3.2.17",
+    "@ankhorage/orchestrator": "^0.3.3"
   },
   "devDependencies": {
     "@ankhorage/devtools": "^1.13.0",

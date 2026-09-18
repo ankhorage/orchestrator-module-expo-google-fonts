@@ -20,6 +20,7 @@ interface PlatformProjection {
   readonly metroRuntime: { readonly name: string; readonly version: string };
   readonly requiredPeers: readonly { readonly name: string; readonly version: string }[];
   readonly tooling: {
+    readonly reactTypes: { readonly name: string; readonly version: string };
     readonly typescript: { readonly name: string; readonly version: string };
   };
 }
@@ -52,7 +53,7 @@ async function writeConsumerPackageAsync(
       '@ankhorage/runtime': '2.2.0',
     },
     devDependencies: {
-      '@types/react': '^19.2.18',
+      [platform.tooling.reactTypes.name]: platform.tooling.reactTypes.version,
       [platform.tooling.typescript.name]: platform.tooling.typescript.version,
     },
   };
