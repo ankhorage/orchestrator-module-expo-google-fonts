@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.7
+
+### Patch Changes
+
+- f9b81e3: Update the released Expo Runtime and Orchestrator dependencies and keep SDK 57 consumer tooling on the canonical Expo platform contract.
+
 ## 0.2.6
 
 ### Patch Changes
