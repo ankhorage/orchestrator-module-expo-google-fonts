@@ -1,5 +1,12 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.9
+
+### Patch Changes
+
+- d32f6a8: Update Renovate-managed workflows.
+- efea558: Update dependencies: `@ankhorage/expo-runtime`.
+
 ## 0.2.8
 
 ### Patch Changes
