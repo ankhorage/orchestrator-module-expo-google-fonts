@@ -2,4 +2,4 @@
 '@ankhorage/orchestrator-module-expo-google-fonts': patch
 ---
 
-Update Ankhorage dependencies: `@ankhorage/expo-runtime`, `@ankhorage/orchestrator`.
+Update dependencies: `@ankhorage/expo-runtime`, `@ankhorage/orchestrator`, `@types/bun`.
