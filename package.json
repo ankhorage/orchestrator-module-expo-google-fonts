@@ -61,7 +61,7 @@
     "@ankhorage/orchestrator": "^0.4.3"
   },
   "devDependencies": {
-    "@ankhorage/devtools": "^2.3.10",
+    "@ankhorage/devtools": "^2.3.13",
     "@types/bun": "^1.4.2",
     "@types/node": "^24.13.3",
     "typescript": "~6.0.3"
