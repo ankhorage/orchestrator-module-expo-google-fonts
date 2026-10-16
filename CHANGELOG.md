@@ -1,5 +1,11 @@
 # @ankhorage/orchestrator-module-expo-google-fonts
 
+## 0.2.19
+
+### Patch Changes
+
+- 477bd6a: Update dependencies: `@ankhorage/expo-runtime`.
+
 ## 0.2.18
 
 ### Patch Changes
