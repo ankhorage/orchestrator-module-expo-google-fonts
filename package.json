@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@ankhorage/expo-runtime": "^7.0.2",
-    "@ankhorage/orchestrator": "^0.4.5"
+    "@ankhorage/orchestrator": "^0.4.6"
   },
   "devDependencies": {
     "@ankhorage/devtools": "^2.3.34",
