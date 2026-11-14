@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "adapter",
+  "title": "Ankhorage Expo Google Fonts Orchestrator Module",
+  "summary": "Installs and configures Expo Google Fonts through the Ankhorage Orchestrator module boundary.",
+  "purpose": "Express Google Fonts project changes as deterministic Orchestrator lifecycle actions and explicit host configuration.",
+  "domain": "Expo Google Fonts module",
+  "responsibilities": [
+    "Define Google Fonts module configuration and lifecycle behavior.",
+    "Provide template files required by configured Expo Google Fonts.",
+    "Expose host integration for the installed font configuration."
+  ],
+  "boundaries": [
+    "Does not own the Orchestrator lifecycle engine or Expo runtime.",
+    "Does not publish Google font packages or choose an application's visual design.",
+    "Does not manage arbitrary non-Google font providers."
+  ],
+  "audience": [
+    "Expo projects installing Google Fonts through Ankhorage Orchestrator.",
+    "Module composition code that requires explicit font host integration."
+  ],
+  "useCases": [
+    "Install configured Google Fonts into an Expo project.",
+    "Generate the module-owned font template files.",
+    "Bind the installed font configuration through the host entrypoint."
+  ],
+  "architecture": {
+    "role": "Provider module adapting Expo Google Fonts to Orchestrator lifecycle and host boundaries.",
+    "invariants": [
+      "Project mutations are expressed through the published Orchestrator module API.",
+      "Font-provider behavior stays within the module adapter.",
+      "Host integration remains an explicit public entrypoint."
+    ]
+  },
+  "constraints": {
+    "platforms": ["Expo", "React Native"],
+    "limitations": [
+      "Supports Google Fonts packages compatible with the module configuration.",
+      "Font availability and loading remain subject to the configured Expo environment."
+    ]
+  }
+}
